@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X Monitor - 2026-02-10-2000</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #252525;
+            --text-primary: #e7e9ea;
+            --text-secondary: #71767b;
+            --accent: #1d9bf0;
+            --accent-hover: #1a8cd8;
+            --border: #2f3336;
+            --crypto: #f7931a;
+            --ai: #10a37f;
+            --tech: #8b5cf6;
+            --macro: #ef4444;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .stats-line {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 12px;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+        
+        .editorial-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .editorial-card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .category {
+            margin-bottom: 30px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 15px;
+        }
+        
+        .category-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .category-header .count {
+            background: var(--bg-tertiary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .category-crypto .category-header {
+            border-color: var(--crypto);
+        }
+        
+        .category-ai .category-header {
+            border-color: var(--ai);
+        }
+        
+        .category-tech .category-header {
+            border-color: var(--tech);
+        }
+        
+        .category-macro .category-header {
+            border-color: var(--macro);
+        }
+        
+        .tweet {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        
+        .tweet:hover {
+            border-color: var(--accent);
+        }
+        
+        .tweet.priority {
+            border-left: 3px solid var(--accent);
+        }
+        
+        .tweet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .tweet-author {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .author-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .author-handle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .author-handle a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .author-handle a:hover {
+            text-decoration: underline;
+        }
+        
+        .tweet-time {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        .tweet-text {
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .tweet-text a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .tweet-text a:hover {
+            text-decoration: underline;
+        }
+        
+        .tweet-media {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .tweet-media img {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .tweet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .tweet-metrics {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .tweet-link a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .tweet-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .retweet-badge {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .priority-badge {
+            background: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 30px;
+        }
+        
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .stat {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="https://maxumbra.github.io/signal-monitor/" style="color: inherit; text-decoration: none;">📡 Signal Monitor</a></h1>
+            <p class="subtitle">10/02/2026 - 20:00</p>
+            <p class="stats-line">Crypto 23% · AI 23% · Tech 5% · Macro 0% · Other 49%</p>
+        </header>
+
+        <div class="editorial-cards">
+            <div class="editorial-card"><strong>Crypto</strong> — LayerZero dominó el timeline con un anuncio masivo: Tether integra su tech en WDK, 0xfoobar lo llama &#39;the most important blockchain since Ethereum&#39;, y Packy McCormick lo valida desde fuera. Goldman Sachs reveló $2.36B en crypto holdings (BTC $1.1B, ETH $1B, XRP $153M, SOL $108M) — la señal institucional más fuerte del año. Base y Coinbase empujan x402 con Stripe para pagos de agentes AI con USDC onchain.</div>
+            <div class="editorial-card"><strong>AI</strong> — Obsidian 1.12 lanza CLI nativo para agentes (OpenClaw, Claude Code, Codex) — 3,500 likes, la intersección knowledge management + AI agents se consolida. Stitch by Google ahora exporta a Figma, validando que vibe design necesita herramientas pro para el polish final. Stripe + x402 para machine payments en Base es la primera implementación seria de agentes pagando onchain.</div>
+            <div class="editorial-card"><strong>Tech</strong> — Jordan Singer resume el zeitgeist: &#39;the layer of abstraction we&#39;ll create software at is deciding how it looks and works — code will never be seen by most&#39;. El shift de code-first a intent-first se acelera con cada herramienta de vibe coding que sale.</div>
+            <div class="editorial-card"><strong>Macro</strong> — a16z reporta que el optimismo de adultos en US toca mínimo histórico. Contraste brutal: Goldman mete $2.36B en crypto mientras Main Street está en su punto más pesimista. El capital institucional apuesta contra el sentimiento popular.</div>
+            <div class="editorial-card"><strong>Señal del día</strong> — Stripe + x402: pagos de agentes AI con USDC onchain via Base. La primera implementación real de machine-to-machine payments usando stablecoins. No es un whitepaper ni un concepto — Stripe lo está construyendo. Esto es infraestructura para la economía de agentes.</div>
+        </div>
+
+        <section class="category category-crypto">
+            <div class="category-header">
+                <h2>Crypto</h2>
+                <span class="count">9 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Watcher.Guru</span>
+                        <span class="author-handle"><a href="https://x.com/WatcherGuru" target="_blank">@WatcherGuru</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 08:47 PM</span>
+                </div>
+                <div class="tweet-text">JUST IN: Goldman Sachs discloses holding $2,360,000,000 worth of crypto:
+
+Bitcoin: $1,100,000,000
+ETH: $1,000,000,000
+XRP: $153,000,000
+SOL: $108,000,000</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/media/HA0wi_4aAAI9Rb-?format=jpg&name=360x360" alt="Tweet media" loading="lazy"><img src="https://pbs.twimg.com/media/HA0wi_vaAAEeSpa?format=jpg&name=360x360" alt="Tweet media" loading="lazy"><img src="https://pbs.twimg.com/media/HA0wi_-bgAA4Do6?format=jpg&name=360x360" alt="Tweet media" loading="lazy"><img src="https://pbs.twimg.com/media/HA0wi_VXcAAsNG_?format=jpg&name=360x360" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 10,000 · 🔁 1,700 · 💬 669</div>
+                    <div class="tweet-link"><a href="https://x.com/WatcherGuru/status/2021325189674357204" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Solana</span>
+                        <span class="author-handle"><a href="https://x.com/solana" target="_blank">@solana</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 11:18 PM</span>
+                </div>
+                <div class="tweet-text">BREAKING: Goldman Sachs just disclosed $108M in SOL holdings
+
+Wall Street’s largest investment bank is allocating to Solana</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/media/HA1TE1oaAAMwOnW?format=jpg&name=small" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 1,700 · 🔁 338 · 💬 269</div>
+                    <div class="tweet-link"><a href="https://x.com/solana/status/2021363201141768511" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Paolo Ardoino </span>
+                        <span class="author-handle"><a href="https://x.com/paoloardoino" target="_blank">@paoloardoino</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 04:49 PM</span>
+                </div>
+                <div class="tweet-text">Tether + LayerZero
+
+Tech layer to scale finance to infinity and ubiquity.
+
+WDK (Wallet Development Kit) is integrating LayerZero tech to its core to ensure that people, communities and companies have finally a unified user experience that abstracts complexity, ready for the day</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 496 · 🔁 63 · 💬 40</div>
+                    <div class="tweet-link"><a href="https://x.com/paoloardoino/status/2021265168760516660" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Bryan Pellegrino (臭企鹅)</span>
+                        <span class="author-handle"><a href="https://x.com/PrimordialAA" target="_blank">@PrimordialAA</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 09:44 PM</span>
+                </div>
+                <div class="tweet-text">A global casino is not enough
+
+When I first got into this space, it was for the promise of something that gave every single person on the planet an escape hatch. It gave them the option to escape the traditional system of intermediaries and gatekeepers, of corruption, of</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 451 · 🔁 88 · 💬 74</div>
+                    <div class="tweet-link"><a href="https://x.com/PrimordialAA/status/2021339439385969089" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">nairolf</span>
+                        <span class="author-handle"><a href="https://x.com/0xNairolf" target="_blank">@0xNairolf</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 03:27 PM</span>
+                </div>
+                <div class="tweet-text">an all in one app with:
+
+- instant stablecoin payments
+- smooth IBAN &lt;&gt; crypto rails
+- a card that works everywhere
+- direct access to defi yields
+- self custody
+
+goes mainstream this year, 100%</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 235 · 🔁 19 · 💬 82</div>
+                    <div class="tweet-link"><a href="https://x.com/0xNairolf/status/2021244516343148838" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="category category-ai">
+            <div class="category-header">
+                <h2>AI</h2>
+                <span class="count">9 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">kepano</span>
+                        <span class="author-handle"><a href="https://x.com/kepano" target="_blank">@kepano</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 03:56 PM</span>
+                </div>
+                <div class="tweet-text">1. install Obsidian 1.12
+2. enable CLI
+3. now OpenClaw, OpenCode, Claude Code, Codex, or any other agent can use Obsidian</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/amplify_video_thumb/2021239296343330816/img/vtDNqBXPtl22au98.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 3,500 · 🔁 297 · 💬 121</div>
+                    <div class="tweet-link"><a href="https://x.com/kepano/status/2021251878521073847" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Ethan Driskill @ OUTERBLOC</span>
+                        <span class="author-handle"><a href="https://x.com/EthanDriskill" target="_blank">@EthanDriskill</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 06:23 PM</span>
+                </div>
+                <div class="tweet-text">15+ years as a designer.
+The only fonts I&<a href="https://x.com/hashtag/39" target="_blank" rel="noopener">#39</a>;ll ever need again.</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/media/HA0PQdwXIAAtQlG?format=png&name=small" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 1,100 · 🔁 46 · 💬 30</div>
+                    <div class="tweet-link"><a href="https://x.com/EthanDriskill/status/2021288808260456635" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Stitch by Google</span>
+                        <span class="author-handle"><a href="https://x.com/stitchbygoogle" target="_blank">@stitchbygoogle</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 08:27 PM</span>
+                </div>
+                <div class="tweet-text"> Our <a href="https://x.com/hashtag/1" target="_blank" rel="noopener">#1</a> most requested feature is here:
+
+You can now export designs from any Stitch agent directly to Figma as editable layers.
+
+Vibe Design is perfect for exploring many ideas in minutes. But sometimes, you need that final layer of polish.
+
+Now you can move seamlessly between</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/amplify_video_thumb/2021278031382540288/img/yd3zDKND-eUl6NyJ.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 480 · 🔁 57 · 💬 17</div>
+                    <div class="tweet-link"><a href="https://x.com/stitchbygoogle/status/2021320125983621626" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Base</span>
+                        <span class="author-handle"><a href="https://x.com/base" target="_blank">@base</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 05:32 PM</span>
+                </div>
+                <div class="tweet-text">Want to build agentic commerce? 
+
+Here&<a href="https://x.com/hashtag/39" target="_blank" rel="noopener">#39</a>;s your starting point.</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/media/HAz62quakAAA6ie?format=png&name=small" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 334 · 🔁 30 · 💬 66</div>
+                    <div class="tweet-link"><a href="https://x.com/base/status/2021276219854270573" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Ryan Carson</span>
+                        <span class="author-handle"><a href="https://x.com/ryancarson" target="_blank">@ryancarson</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 04:37 PM</span>
+                </div>
+                <div class="tweet-text">If you&<a href="https://x.com/hashtag/39" target="_blank" rel="noopener">#39</a>;re trying to setup a team of agents, I built this for you and open sourced it.
+
+Works right on top of 
+<a href="https://x.com/openclaw" target="_blank" rel="noopener">@openclaw</a>
+ with one command.</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 212 · 🔁 13 · 💬 26</div>
+                    <div class="tweet-link"><a href="https://x.com/ryancarson/status/2021262180537053419" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="category category-tech">
+            <div class="category-header">
+                <h2>Tech</h2>
+                <span class="count">2 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Jordan Singer</span>
+                        <span class="author-handle"><a href="https://x.com/jsngr" target="_blank">@jsngr</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 04:11 AM</span>
+                </div>
+                <div class="tweet-text">i firmly believe that the layer of abstraction we’ll be creating new software at is simply deciding how it looks and works
+
+and the code will never be seen by most</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 523 · 🔁 33 · 💬 33</div>
+                    <div class="tweet-link"><a href="https://x.com/jsngr/status/2021074438213730714" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Gokul Rajaram</span>
+                        <span class="author-handle"><a href="https://x.com/gokulr" target="_blank">@gokulr</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 05:43 PM</span>
+                </div>
+                <div class="tweet-text">THE ESSENCE OF GOOD STRATEGY
+
+This is one of the crispest strategy articulations I&<a href="https://x.com/hashtag/39" target="_blank" rel="noopener">#39</a>;ve seen. After reading it, it&<a href="https://x.com/hashtag/39" target="_blank" rel="noopener">#39</a>;s crystal clear what the company&<a href="https://x.com/hashtag/39" target="_blank" rel="noopener">#39</a>;s aspirations and goals are, what they&<a href="https://x.com/hashtag/39" target="_blank" rel="noopener">#39</a>;re trying to accomplish, and what the associated key initiatives are. 
+
+Most startup strategy</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 113 · 🔁 9 · 💬 9</div>
+                    <div class="tweet-link"><a href="https://x.com/gokulr/status/2021278891302883783" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="category category-other">
+            <div class="category-header">
+                <h2>📌 Other</h2>
+                <span class="count">19 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Brian Armstrong</span>
+                        <span class="author-handle"><a href="https://x.com/brian_armstrong" target="_blank">@brian_armstrong</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 09, 08:59 PM</span>
+                </div>
+                <div class="tweet-text">Crypto and tokenization will be a great equalizer, giving billions a level playing field to pursue wealth creation.
+
+Equality of opportunity is worth pursuing. Equality of outcomes leads to very dark places.</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 3,400 · 🔁 464 · 💬 614</div>
+                    <div class="tweet-link"><a href="https://x.com/brian_armstrong/status/2020965896165130722" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Benji Taylor</span>
+                        <span class="author-handle"><a href="https://x.com/benjitaylor" target="_blank">@benjitaylor</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 09, 04:57 PM</span>
+                </div>
+                <div class="tweet-text">There’s a serious argument to be made that Mike is the best designer in the world.</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/amplify_video_thumb/2020849670537564160/img/L3MJU-J8isnz_2eW.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 1,500 · 🔁 30 · 💬 52</div>
+                    <div class="tweet-link"><a href="https://x.com/benjitaylor/status/2020904934078898199" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">LayerZero</span>
+                        <span class="author-handle"><a href="https://x.com/LayerZero_Core" target="_blank">@LayerZero_Core</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 09:31 PM</span>
+                </div>
+                <div class="tweet-text"></div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 1,400 · 🔁 313 · 💬 121</div>
+                    <div class="tweet-link"><a href="https://x.com/LayerZero_Core/status/2021336132047294898" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">eric</span>
+                        <span class="author-handle"><a href="https://x.com/defyneric" target="_blank">@defyneric</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 06:57 AM</span>
+                </div>
+                <div class="tweet-text"></div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 598 · 🔁 81 · 💬 38</div>
+                    <div class="tweet-link"><a href="https://x.com/defyneric/status/2021116183898886201" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">David Marcus</span>
+                        <span class="author-handle"><a href="https://x.com/davidmarcus" target="_blank">@davidmarcus</a></span>
+                    </div>
+                    <span class="tweet-time">Feb 10, 03:27 AM</span>
+                </div>
+                <div class="tweet-text">This is amazing.</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/media/HAwaF__WkAAviz6?format=jpg&name=small" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics">❤️ 450 · 🔁 19 · 💬 18</div>
+                    <div class="tweet-link"><a href="https://x.com/davidmarcus/status/2021063331596075058" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <footer>
+            <p>Generated by <a href="https://github.com/maxumbra/signal-monitor">Signal Monitor</a> · 2026-02-10T20:00</p>
+            <p>Powered by Clawdbot 🤖</p>
+        </footer>
+    </div>
+</body>
+</html>

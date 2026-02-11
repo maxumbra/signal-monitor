@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f0f0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <title>Signal Monitor - 2026-02-11-0800</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #252525;
+            --text-primary: #e7e9ea;
+            --text-secondary: #71767b;
+            --accent: #1d9bf0;
+            --accent-hover: #1a8cd8;
+            --border: #2f3336;
+            --crypto: #f7931a;
+            --ai: #10a37f;
+            --tech: #8b5cf6;
+            --macro: #ef4444;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        
+        .header-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .stats-line {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 12px;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+        
+        .editorial-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .editorial-card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .category {
+            margin-bottom: 30px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 15px;
+        }
+        
+        .category-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .category-header .count {
+            background: var(--bg-tertiary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .category-crypto .category-header {
+            border-color: var(--crypto);
+        }
+        
+        .category-ai .category-header {
+            border-color: var(--ai);
+        }
+        
+        .category-tech .category-header {
+            border-color: var(--tech);
+        }
+        
+        .category-macro .category-header {
+            border-color: var(--macro);
+        }
+        
+        .tweet {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        
+        .tweet:hover {
+            border-color: var(--accent);
+        }
+        
+        .tweet.priority {
+            border-left: 3px solid var(--accent);
+        }
+        
+        .tweet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .tweet-author {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .author-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .author-handle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .author-handle a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .author-handle a:hover {
+            text-decoration: underline;
+        }
+        
+        .tweet-time {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        .tweet-text {
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .tweet-text a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .tweet-text a:hover {
+            text-decoration: underline;
+        }
+        
+        .tweet-media {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .tweet-media img {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .tweet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .tweet-metrics {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .tweet-link a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .tweet-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .retweet-badge {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .priority-badge {
+            background: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 30px;
+        }
+        
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats {
+                gap: 10px;
+            }
+            
+            .stat {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://maxumbra.github.io/signal-monitor/"><img src="icon-192.png" alt="Signal Monitor" class="header-logo"></a>
+            <h1><a href="https://maxumbra.github.io/signal-monitor/" style="color: inherit; text-decoration: none;">Signal Monitor</a></h1>
+            <p class="subtitle">11/02/2026 - 08:00</p>
+            <p class="stats-line">Crypto 28% · AI 34% · Tech 2% · Macro 2% · Other 32%</p>
+        </header>
+
+        <div class="editorial-cards">
+            <div class="editorial-card"><strong>Crypto</strong> — Stablecoins dominan la conversación: Tether lanza mapa global de USDT, Visa entra con reporte de stablecoins no-USD (32 analizadas), y Stablecards empuja el modelo todo-en-uno cripto-fiat. Mert abre debate sobre fungibilidad de Bitcoin — el historial on-chain como vulnerabilidad fundamental vs oro.</div>
+            <div class="editorial-card"><strong>AI</strong> — Semana intensa: el jefe de safety research de Anthropic renuncia y desaparece, 0xSammy compara las señales actuales de AI con los primeros signos de COVID, y Matias Nisenson predice el primer hack amplificado por AI en menos de un año. OpenClaw aparece con deployment one-click en Virtuals Protocol y un workflow viral de video con Seedance 2.</div>
+            <div class="editorial-card"><strong>Tech</strong> — Nothing avanza donde Apple se quedó dormido — Linus Ekenstam señala que el hardware con AI integrada debería haber sido la jugada de Apple hace un año.</div>
+            <div class="editorial-card"><strong>Macro</strong> — Silencio macro relativo. Morpho lanza alertas automatizadas para tracking de vaults DeFi — la infraestructura de monitoreo se sofistica.</div>
+            <div class="editorial-card"><strong>Señal del día</strong> — El éxodo de talento de safety en Anthropic es la señal más fuerte: cuando los que vigilan a la AI deciden que es mejor desaparecer, estamos en territorio nuevo. Combinado con la predicción de hacks amplificados por AI y la velocidad de deployment de agentes autónomos — el gap entre capacidad y control se está abriendo.</div>
+        </div>
+
+        <section class="category category-crypto">
+            <div class="category-header">
+                <h2>Crypto</h2>
+                <span class="count">14 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Tether</span>
+                        <span class="author-handle"><a href="https://x.com/tether" target="_blank">@tether</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">Tether Launches First Public Map of USD₮’s Ecosystem Worldwide 
+
+Read more:
+<a href="https://t.co/1o5YbOQjwD" target="_blank" rel="noopener">https://t.co/1o5YbOQjwD</a></div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021572808917037143" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">CoinGecko</span>
+                        <span class="author-handle"><a href="https://x.com/coingecko" target="_blank">@coingecko</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">TODAY: Bitdeer has reportedly sold 25% of their total Bitcoin holdings (487 $BTC). <a href="https://t.co/ltJAgFPEk0" target="_blank" rel="noopener">https://t.co/ltJAgFPEk0</a></div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/media/HA26OEGXkAA2a6P.jpg" alt="Tweet media" loading="lazy"><img src="https://pbs.twimg.com/media/HA26ODwXsAA6enZ.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021477352438628457" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">mert</span>
+                        <span class="author-handle"><a href="https://x.com/mert" target="_blank">@mert</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">bitcoin is almost digital gold but has one flaw 
+
+unlike gold, it is not fungible 
+
+you can not melt one bitcoin for another, its history can be used to nullify its value
+
+to make it fungible like gold, you need to add privacy, this is the last missing piece 
+
+zcash</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/1989973842413195776" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Ari Eiberman 🇦🇷 Stablecards</span>
+                        <span class="author-handle"><a href="https://x.com/AriEiberman" target="_blank">@AriEiberman</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">an all in one app with:
+
+- instant local-stablecoin payments
+- abstract blockchain jargon
+- smooth bank &lt;&gt; blockchain rails 1:1. 
+- a card that is both physical and mobile
+- direct access to Defi yields and tokenized stocks
+- self custody with social recovery and account portability
+
+goes mainstream in each Latam market this year, 100%</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021562331138822293" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Zeneca🔮</span>
+                        <span class="author-handle"><a href="https://x.com/Zeneca" target="_blank">@Zeneca</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">Working on something exciting in the AI space with a couple of friends
+
+Should launch by the end of the month 🔥</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021368187456253953" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="category category-ai">
+            <div class="category-header">
+                <h2>AI</h2>
+                <span class="count">17 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Miles Deutscher</span>
+                        <span class="author-handle"><a href="https://x.com/milesdeutscher" target="_blank">@milesdeutscher</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">This is getting out of control now...
+
+Read this slowly.
+
+In the past week alone:
+
+• Head of Anthropic&#39;s safety research quit, said &quot;the world is in peril,&quot; moved to the UK to &quot;become invisible&quot; and write poetry.
+• Half of xAI&#39;s co-founders have now left. The latest said &quot;recursive self-improvement loops go live in the next 12 months.&quot;
+• Anthropic&#39;s own safety report confirms Claude can tell when it&#39;s being tested - and adjusts its behavior accordingly.
+• ByteDance dropped Seedance 2.0. A filmmaker with 7 years of experience said 90% of his skills can already be replaced by it.
+• Yoshua Bengio (literal godfather of AI) in the International AI Safety Report: &quot;We&#39;re seeing AIs whose behavior when they are tested is different from when they are being used&quot; - and confirmed it&#39;s &quot;not a coincidence.&quot;
+
+And to top it all off, the U.S. government declined to back the 2026 International AI Safety Report for the first time.
+
+The alarms aren&#39;t just getting louder. The people ringing them are now leaving the building.</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021487637299855540" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Binance</span>
+                        <span class="author-handle"><a href="https://x.com/binance" target="_blank">@binance</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">This FUD-fighting warrior video is just an example.
+
+We’re at a turning point in video creation, with AI unlocking creativity like never before.
+
+Put your skills to work and turn your ideas into cult-favorite videos, comics, or scripts and stand a chance to win 55 BNB.
+
+Choose any theme you like: Crypto Guardians, Anti-FUD, Buidl, or any crypto story you want to tell.
+
+Share your creations in the comments and repost them. 👇</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/amplify_video_thumb/2021264147980353536/img/BqlsrCuyiAX0YNHP.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021267923826856043" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Travala.com 🏨 ✈️</span>
+                        <span class="author-handle"><a href="https://x.com/travalacom" target="_blank">@travalacom</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">💸 100+ crypto options
+✈️ 600+ airlines</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/1846690188673929720" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">0xSammy</span>
+                        <span class="author-handle"><a href="https://x.com/0xSammy" target="_blank">@0xSammy</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">This article is a must read
+
+We saw early signs of COVID before it snowballed; those same signs are returning with AI
+
+Opus 4.6, GPT5.3/Codex are all experts in writing code, meaning AI is now building AI meaning you can expect a significant evolution in capabilities this year
+
+The average person still dismisses AI as ineffective due to prior hallucinations, but they were likely using free, outdated models, not on the latest paid models
+
+There’s a window where most will remain blissfully unaware of what’s coming next; mass job displacement and huge disruption 
+
+But with that comes opportunity to be on the cutting edge, and hence catch a glimmer of what’s coming in the hopes you can position yourself accordingly
+
+In the past month alone I’ve seen a step
+change in what’s personally possible with my own ambitions, and anyone willing to be curious will see this too
+
+The traditional model of working in a 9-5 job that you got from with your University degree isn’t going to provide you the same security it once did
+
+Those who remain curious and lean into using the latest tools will secure their own future, rather than having someone else dictate it for them</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021488258736112017" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Udi Wertheimer</span>
+                        <span class="author-handle"><a href="https://x.com/udiWertheimer" target="_blank">@udiWertheimer</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">here’s how i made this BANGER video with <a href="https://x.com/openclaw" target="_blank" rel="noopener">@openclaw</a> in 5 minutes
+
+(500x FASTER and BETTER than any “AI slop video agency” would’ve done it)
+
+1. i heard that seedance 2 is an amazing video model but in closed beta. told my bot (using opus 4.6) to find a way for me to get in. it did
+
+2. i uploaded an old image i had of the bald wizard riding a bicycle in the air next to a price chart in the clouds
+
+3. i used voice dictation to haphazardly describe what i want. no “prompt engineering” i just puked all of my thoughts into it: the video should be inspired by the dreamworks intro, wizard should ride a bicycle in the air up and down a price chart and go to the moon, also add cool cinematic camera movements, i have no idea what i’m not a cinematographer, just make it look cool
+
+4. then i told it to find prompt samples and best practices from the last 24 hours of people using seedance 2, and use those structures to turn my instructions into a prompt
+
+5. it worked. prompt was long, detailed, and organized. sent it directly to seedance 2. result was impressive but not perfect.
+
+6. instead of explaining what i didn’t like i asked openclaw to start another agent using gemini 3 and use its video vision (best in class) to see exactly what was wrong and adjust the prompt to avoid it
+
+7. it did. second generation was perfect. i didn’t need to do any editing. music was perfectly synced with the action, it slowed down when it needed to, faded to black at the right moment, basically perfect. tbh i didn’t like the “title screen” at the i felt it was a bit tacky. but i already spent 5 minutes on this which is way too much time so whatever. if i really wanted to i could probably have openclaw use nano banana pro to generate the title screen and use it as last frame with seedance 2
+
+tldr if you wasted the last 6 months learning how to perfectly prompt veo 3 or kling, i’m sorry for your loss</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021420214793982155" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="category category-tech">
+            <div class="category-header">
+                <h2>Tech</h2>
+                <span class="count">1 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Linus ✦ Ekenstam</span>
+                        <span class="author-handle"><a href="https://x.com/LinusEkenstam" target="_blank">@LinusEkenstam</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">This is what Apple should have done a year ago. 
+
+But instead Nothing is charging full-steam ahead. 
+
+If you been following along here, you know that through the last couple of years. I&#39;ve been talking a lot about self-assembling apps. About how the future of software will look very different from today. 
+
+We are closing in on that future, at an accelerating speed. It&#39;s happening right now. There is no going back. 
+
+Anything you can imagine, will be made possible, any fringe and super personal app that only you would need. Could and will be built. 
+
+What happens to software at scale when everyone can make whatever their hearts desires?
+
+The future is here right now. This implementation by nothing is so smart. They make sure the apps you build look on point, and they give you the tools (no need to be a techie) You just use plain language and they sort the rest.
+
+This is so smooth. I hope others will follow. 
+This is a very mainstream approach.
+
+I&#39;m watching this over and over. It&#39;s so smart.</div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/amplify_video_thumb/2021242392075173890/img/ag9sAf9oR0-7Kizv.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021243521533903291" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="category category-macro">
+            <div class="category-header">
+                <h2>Macro</h2>
+                <span class="count">1 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Morpho 🦋</span>
+                        <span class="author-handle"><a href="https://x.com/Morpho" target="_blank">@Morpho</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">Real-time market-level information → informed allocation decisions
+
+New automated alerts, built by <a href="https://x.com/HypernativeLabs" target="_blank" rel="noopener">@HypernativeLabs</a>, now track changes across all Morpho Markers &amp;amp; Vaults. <a href="https://t.co/ax7R3PVSqO" target="_blank" rel="noopener">https://t.co/ax7R3PVSqO</a></div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/media/HA4Q0LTaIAEJyLE.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021571778892665202" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="category category-other">
+            <div class="category-header">
+                <h2>📌 Other</h2>
+                <span class="count">16 tweets</span>
+            </div>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Rabby Wallet</span>
+                        <span class="author-handle"><a href="https://x.com/Rabby_io" target="_blank">@Rabby_io</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">Now supporting keyboard shortcuts.
+
+Press ⌘L (Mac) or Ctrl+L (Windows) to lock your extension in a split second. <a href="https://t.co/PDWsAP1V1P" target="_blank" rel="noopener">https://t.co/PDWsAP1V1P</a></div>
+                <div class="tweet-media"><img src="https://pbs.twimg.com/amplify_video_thumb/2021582800550526976/img/-SjQUlQ_UtFr3FHy.jpg" alt="Tweet media" loading="lazy"></div>
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021583086023012634" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Owner.One</span>
+                        <span class="author-handle"><a href="https://x.com/OwnerOneFamily" target="_blank">@OwnerOneFamily</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">If you don&#39;t own your family&#39;s infrastructure, one of your service providers does. Speak to your trusted people. Learn what questions matter.</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2015837387197448335" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">1 Billion Followers Summit</span>
+                        <span class="author-handle"><a href="https://x.com/1billionsummit" target="_blank">@1billionsummit</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">RT <a href="https://x.com/CreatorsHQ" target="_blank" rel="noopener">@CreatorsHQ</a>: منصة X تفتح الباب لصنّاع المحتوى عبر X Originals 
+فرصة حقيقية لتحويل فكرتك إلى عمل أصلي يُعرض على منصة عالمية، مع دعم إنتاج…</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2014662484867891205" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Netflix Latinoamérica</span>
+                        <span class="author-handle"><a href="https://x.com/NetflixLAT" target="_blank">@NetflixLAT</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text">El amor verdadero no usa máscaras. Bridgerton: T4 (Parte 1) ya está disponible. Solo en Netflix.</div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2014429544640549372" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+
+            <article class="tweet">
+                
+                <div class="tweet-header">
+                    <div class="tweet-author">
+                        <span class="author-name">Paolo Ardoino 🤖</span>
+                        <span class="author-handle"><a href="https://x.com/paoloardoino" target="_blank">@paoloardoino</a></span>
+                    </div>
+                    <span class="tweet-time"></span>
+                </div>
+                <div class="tweet-text"><a href="https://t.co/Is1Giohce3" target="_blank" rel="noopener">https://t.co/Is1Giohce3</a></div>
+                
+                <div class="tweet-footer">
+                    <div class="tweet-metrics"></div>
+                    <div class="tweet-link"><a href="https://x.com//status/2021584063358791919" target="_blank">View on X →</a></div>
+                </div>
+            </article>
+        </section>
+
+        <footer>
+            <p>Generated by <a href="https://github.com/maxumbra/signal-monitor">Signal Monitor</a> · 2026-02-11T08:00</p>
+            <p>Powered by Clawdbot 🤖</p>
+        </footer>
+    </div>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+        // Pull-to-refresh
+        let startY = 0;
+        let pulling = false;
+        const ptr = document.createElement('div');
+        ptr.style.cssText = 'position:fixed;top:0;left:0;right:0;text-align:center;padding:12px;color:#71767b;font-size:14px;z-index:9999;transform:translateY(-100%);transition:transform .2s;background:#0f0f0f;';
+        ptr.textContent = '↓ Pull to refresh';
+        document.body.prepend(ptr);
+        document.addEventListener('touchstart', e => { if (window.scrollY === 0) { startY = e.touches[0].pageY; pulling = true; } });
+        document.addEventListener('touchmove', e => {
+            if (!pulling) return;
+            const dy = e.touches[0].pageY - startY;
+            if (dy > 10 && dy < 150) { ptr.style.transform = `translateY(${Math.min(dy/2, 40)}px)`; ptr.textContent = dy > 80 ? '↑ Release to refresh' : '↓ Pull to refresh'; }
+        });
+        document.addEventListener('touchend', e => {
+            if (!pulling) return;
+            pulling = false;
+            const dy = e.changedTouches[0].pageY - startY;
+            ptr.style.transform = 'translateY(-100%)';
+            if (dy > 80) { ptr.textContent = 'Refreshing...'; ptr.style.transform = 'translateY(0)'; location.reload(); }
+        });
+    </script>
+</body>
+</html>

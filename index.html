@@ -67,10 +67,10 @@
         Powered by <a href="https://github.com/maxumbra/signal-monitor">Signal Monitor</a>
     </footer>
     <script>
+        // Unregister any old service workers
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {});
+            navigator.serviceWorker.getRegistrations().then(r => r.forEach(sw => sw.unregister()));
         }
-        // Native pull-to-refresh via overscroll-behavior
     </script>
 </body>
 </html>
